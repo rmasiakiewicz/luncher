@@ -1,18 +1,15 @@
 # coding=utf-8
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship
-
-from database.base import Base
+from luncher import db
 
 
-class Supplier(Base):
+class Supplier(db.Model):
 
     __tablename__ = 'supplier'
 
-    supplier_id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String, unique=True)
+    supplier_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String, unique=True)
 
-    dishes = relationship("Dish", back_populates="supplier")
+    dishes = db.relationship("Dish", backref="supplier")
 
-    def __init__(self, name):
-        self.name = name
+    def __repr__(self):
+        return f"Supplier('{self.name}')"

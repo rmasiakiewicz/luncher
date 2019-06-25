@@ -1,27 +1,19 @@
 # coding=utf-8
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship
-
-from database.base import Base
+from luncher import db
 
 
-class User(Base):
+class User(db.Model):
 
     __tablename__ = 'user'
 
-    user_id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String)
-    surname = Column(String)
-    email = Column(String, unique=True)
-    password = Column(String)
-    level = Column(Integer)
+    user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.Strin)
+    surname = db.Column(db.String)
+    email = db.Column(db.String, unique=True)
+    password = db.Column(db.String)
+    level = db.Column(db.Integer, default=1)
 
-    orders = relationship("Order", back_populates="user")
+    orders = db.relationship("Order", backref="user")
 
-    def __init__(self, user_id, name, surname, email, password, level):
-        self.user_id = user_id
-        self.name = name
-        self.surname = surname
-        self.email = email
-        self.password = password
-        self.level = level
+    def __repr__(self):
+        return f"User('{self.name}', '{self.surname}', '{self.email}')"

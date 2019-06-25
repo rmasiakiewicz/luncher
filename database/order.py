@@ -1,24 +1,19 @@
 # coding=utf-8
-from sqlalchemy import Column, Integer, UniqueConstraint, DATE, ForeignKey
-from sqlalchemy.orm import relationship
+import datetime
 
-from database.base import Base
+from luncher import db
 
 
-class Order(Base):
+class Order(db.Model):
 
     __tablename__ = 'order'
 
-    order_id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey('user.user_id'))
-    basket_id = Column(Integer)
-    date = Column(DATE)
-    __table_args__ = (UniqueConstraint('user_id', 'date'),)
+    order_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+    basket_id = db.Column(db.Integer, db.ForeignKey('basket.basket_id'), unique=True)
+    date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    __table_args__ = (db.UniqueConstraint('user_id', 'date'),)
 
-    basket = relationship("Basket", back_populates="order")
-    user = relationship("User", back_populates="orders")
+    def __repr__(self):
+        return f"Order(from user: '{self.user_id}', date: '{self.date}')"
 
-    def __init__(self, user_id, basket_id, date):
-        self.user_id = user_id
-        self.basket_id = basket_id
-        self.date = date

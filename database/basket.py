@@ -1,25 +1,15 @@
 # coding=utf-8
-from sqlalchemy import Column, Integer, Numeric
-from sqlalchemy.orm import relationship
-
-from database.base import Base
-from database.dish import dish_basket_association_table
+from luncher import db
 
 
-class Basket(Base):
+class Basket(db.Model):
 
     __tablename__ = 'basket'
 
-    basket_id = Column(Integer, primary_key=True, autoincrement=True)
-    soup_id = Column(Integer)
-    main_dish_id = Column(Integer)
-    total_price = Column(Numeric)
+    basket_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    info = db.Column(db.JSON, nullable=False)
 
-    order = relationship("Order", uselist=False, back_populates="basket")
-    dishes = relationship("Dish", secondary=dish_basket_association_table, back_populates="baskets")
+    order = db.relationship("Order", uselist=False, backref="basket")
 
-    def __init__(self, name, supplier_id, dish_type, price):
-        self.name = name
-        self.supplier_id = supplier_id
-        self.dish_type = dish_type
-        self.price = price
+    def __repr__(self):
+        return f"Basket('{self.basket_id}')"
