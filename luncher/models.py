@@ -18,7 +18,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String, unique=True)
     password = db.Column(db.String)
     level = db.Column(db.Integer, default=1)
-    orders = db.relationship("Order", backref="user")
+    orders = db.relationship("Order", backref="users")
 
     def __repr__(self):
         return f"User('{self.name}', '{self.surname}', '{self.email}')"
@@ -33,7 +33,7 @@ class Order(db.Model):
     __table_args__ = (db.UniqueConstraint('user_id', 'date'),)
 
     def __repr__(self):
-        return f"Order(from user: '{self.user_id}', date: '{self.date}')"
+        return f"Order(from users: '{self.user_id}', date: '{self.date}')"
 
 
 class Basket(db.Model):

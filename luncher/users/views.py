@@ -1,25 +1,17 @@
-from flask import render_template, url_for, flash, redirect, request
-from flask_login import login_user, current_user, logout_user, login_required
+from flask import Blueprint, redirect, url_for, flash, render_template, request
+from flask_login import current_user, login_user, logout_user, login_required
 
-from luncher import app, db, bcrypt
-from luncher.forms import RegistrationForm, LoginForm
+from luncher import bcrypt, db
 from luncher.models import User
+from luncher.users.forms import RegistrationForm, LoginForm
+
+users = Blueprint('users', __name__)
 
 
-@app.route("/")
-def home():
-    return render_template('home.html')
-
-
-@app.route("/about")
-def about():
-    return render_template('home.html')
-
-
-@app.route("/register", methods=['GET', 'POST'])
+@users.route("/register", methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
@@ -27,14 +19,14 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash(f'Account created for {form.email.data}', 'success')
-        return redirect(url_for('login'))
+        return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
 
 
-@app.route("/login", methods=['GET', 'POST'])
+@users.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
     form = LoginForm()
     if not form.validate_on_submit():
         return render_template('login.html', title='Login', form=form)
@@ -43,20 +35,20 @@ def login():
         login_user(user, remember=form.remember.data)
         next_page = request.args.get('next')
         flash(f'You have been logged in!', 'success')
-        return redirect(next_page) if next_page else redirect(url_for('home'))
+        return redirect(next_page) if next_page else redirect(url_for('main.home'))
     else:
         flash('Login Unsuccessful. Pleas check username and password', 'danger')
         return render_template('login.html', title='Login', form=form)
 
 
-@app.route("/logout", methods=['GET', 'POST'])
+@users.route("/logout", methods=['GET', 'POST'])
 def logout():
     logout_user()
     flash(f'You have been logged out!', 'success')
-    return redirect(url_for('home'))
+    return redirect(url_for('main.home'))
 
 
-@app.route("/account")
+@users.route("/account")
 @login_required
 def account():
     return render_template('account.html', title='Account')
