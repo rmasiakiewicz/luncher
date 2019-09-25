@@ -54,6 +54,10 @@ class Dish(db.Model):
     supplier_id = db.Column(db.Integer, db.ForeignKey('supplier.id'))
     dish_type = db.Column(db.Integer)
     price = db.Column(db.Numeric)
+    calories = db.Column(db.Numeric)
+    carbohydrates = db.Column(db.Numeric)
+    fat = db.Column(db.Numeric)
+    proteins = db.Column(db.Numeric)
     __table_args__ = (db.UniqueConstraint('name', 'supplier_id'),)
 
     def __repr__(self):

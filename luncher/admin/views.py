@@ -15,7 +15,8 @@ def add_dish():
     if not form.validate_on_submit():
         return render_template('add_dish.html', title='Add dish', form=form)
     dish = Dish(
-        name=form.name.data, supplier_id=form.supplier.data, dish_type=form.dish_type.data, price=form.price.data)
+        name=form.name.data.upper(), supplier_id=form.supplier.data, dish_type=form.dish_type.data,
+        price=form.price.data)
     db.session.add(dish)
     db.session.commit()
     flash(f'Added {form.name.data}', 'success')
@@ -28,7 +29,7 @@ def add_supplier():
     form = AddSupplierForm()
     if not form.validate_on_submit():
         return render_template('add_supplier.html', title='Add supplier', form=form)
-    supplier = Supplier(name=form.name.data)
+    supplier = Supplier(name=form.name.data.upper())
     db.session.add(supplier)
     db.session.commit()
     flash(f'Supplier {form.name.data} added', 'success')
