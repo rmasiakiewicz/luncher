@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block content %}
+<table>
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">Supplier</th>
+            <th scope="col">Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for dish in dishes %}
+        <tr>
+            <td>{{ dish.name }}</td>
+            <td>{{ dish_types.get(dish.dish_type) }}</td>
+            <td>{{ dish.supplier.name }}</td>
+            <td><a class="btn-sm btn-danger" href="{{ url_for('admin.delete_dish', dish_id=dish.id) }}">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

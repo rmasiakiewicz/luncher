@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, FloatField, SubmitField
-from wtforms.validators import DataRequired, ValidationError
+from wtforms.validators import DataRequired, ValidationError, Optional
 
 from luncher.consts import DishType
 from luncher.models import Supplier, Dish
@@ -14,10 +14,10 @@ class AddDishForm(FlaskForm):
     dish_type = SelectField(
         'Dish type', validators=[DataRequired()], coerce=int, choices=[(k, v) for k, v in DishType.DISH_TYPES.items()])
     price = FloatField('Price', validators=[DataRequired()])
-    calories = FloatField('Calories ( Optional )')
-    carbohydrates = FloatField('Carbohydrates ( Optional )')
-    fat = FloatField('Fat ( Optional )')
-    proteins = FloatField('Proteins ( Optional )')
+    calories = FloatField('Calories ( Optional )', validators=[Optional()], filters=[lambda x: x or None])
+    carbohydrates = FloatField('Carbohydrates ( Optional )', validators=[Optional()], filters=[lambda x: x or None])
+    fat = FloatField('Fat ( Optional )', validators=[Optional()], filters=[lambda x: x or None])
+    proteins = FloatField('Proteins ( Optional )', validators=[Optional()], filters=[lambda x: x or None])
     submit = SubmitField('Add')
 
     def validate_dish(self, name, supplier):
