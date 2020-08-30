@@ -1,2 +1,2 @@
-# dealavo_luncher
+# luncher
 App which help to order lunch for company
